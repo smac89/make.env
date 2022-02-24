@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "make.env"
-version = "0.0.2"
+version = "0.0.3"
 description = "Infuses make with the ability to read .env files"
 authors = ["smac89 <nobleman.code@gmx.com>"]
 license = "MIT"
