@@ -1,0 +1,5 @@
+test_var:
+	@echo '$(TEST_VAR)'
+
+foo_bar:
+	@echo $(FOO_BAR)

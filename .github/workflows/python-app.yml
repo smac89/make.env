@@ -10,19 +10,33 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  unittest:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-    - name: Install Dependencies
-      run: poetry install --no-dev --no-root
-    - name: Test with unittest
-      run: poetry run python -m unittest discover -v -s ./tests
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install Dependencies
+        run: poetry install --no-dev --no-root
+      - name: Test with unittest
+        run: poetry run python -m unittest discover -v -s ./tests
+
+  integrationtest:
+    runs-on: ubuntu-latest
+    container:
+      image: 'bats/bats:latest'
+      env:
+        CI: '${{ env.CI }}'
+      options: '--entrypoint bash'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: poetry install --no-dev --no-root
+      - name: Run tests
+        run: bats -r ./tests

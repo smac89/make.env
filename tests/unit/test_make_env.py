@@ -27,8 +27,8 @@ class MakeEnv(unittest.TestCase):
         load_make_env()
         self.assertEqual(os.environ["TEST_VAR"], "")
 
-    def test_special_value_escaped(self) -> None:
+    def test_special_value_remains(self) -> None:
         with open(os.path.join(self.test_dir, ".env"), "w") as f:
             f.write("TEST_VAR='4dabfs#a%d73w$Z2TBN4!nYD4Y$TW'")
         load_make_env()
-        self.assertEqual(os.environ["TEST_VAR"], "4dabfs#a%d73w$$Z2TBN4!nYD4Y$$TW")
+        self.assertEqual(os.environ["TEST_VAR"], "4dabfs#a%d73w$Z2TBN4!nYD4Y$TW")

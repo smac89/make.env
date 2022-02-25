@@ -14,17 +14,24 @@ def load_make_env():
                     ["-h", "--help", "--quiet", "--silent", "-s"],
                 )
             ):
-                print(f"\u001b[1;40;37mLoading .env from {envfile}...\u001b[0m")
+                print(
+                    f"\u001b[1;40;37mLoading .env from {envfile}...\u001b[0m",
+                    file=sys.stderr,
+                )
 
-        os.environ.update(
-            {
-                k: "" if v is None else v.replace("$", "$$")
-                for k, v in denv.items()
-                if os.environ.get(k) != v
-            }
-        )
+            os.environ.update(
+                {
+                    k: "" if v is None else v
+                    for k, v in denv.items()
+                    if os.environ.get(k) != v
+                }
+            )
+
+            return "\n".join(f"export {k}:=$(value {k})" for k in denv)
+
+    return None
 
 
 def main():
-    load_make_env()
-    os.execlp("make", *sys.argv)
+    exports = load_make_env() or "$(call)"
+    os.execlp("make", *sys.argv, "--eval", exports)
