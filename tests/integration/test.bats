@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-BATS_LIB_PATH='/usr/lib/:usr/lib/bats/' bats_load_library 'bats-assert'
+BATS_LIB_PATH="${BATS_LIB_PATH:-'/usr/lib/:usr/lib/bats/'}" bats_load_library 'bats-assert'
 
 setup() {
     mv -f .env{.test,}

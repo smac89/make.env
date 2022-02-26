@@ -29,13 +29,20 @@ jobs:
 
   integrationtest:
     runs-on: ubuntu-latest
-    container:
-      image: 'bats/bats:latest'
-      env:
-        CI: '${{ env.CI }}'
-      options: '--entrypoint bash'
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          repository: 'bats-core/bats-core'
+          path: 'bats'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'bats-core/bats-support'
+          path: 'test_helper/bats-support'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'bats-core/bats-assert'
+          path: 'test_helper/bats-assert'
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
@@ -43,4 +50,6 @@ jobs:
       - name: Install Dependencies
         run: poetry install --no-dev
       - name: Run Tests
-        run: bats -rT ./tests
+        run: ./bats/bin/bats -rT ./tests
+        env:
+          BATS_LIB_PATH: '${{ env.GITHUB_WORKSPACE }}/test_helper'
