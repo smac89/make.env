@@ -52,4 +52,4 @@ jobs:
       - name: Run Tests
         run: ./bats/bin/bats -rT ./tests
         env:
-          BATS_LIB_PATH: '${{ env.GITHUB_WORKSPACE }}/test_helper'
+          BATS_LIB_PATH: '${GITHUB_WORKSPACE}/test_helper'
