@@ -35,14 +35,17 @@ jobs:
         with:
           repository: 'bats-core/bats-core'
           path: 'bats'
+          ref: 'v1.6.0'
       - uses: actions/checkout@v2
         with:
           repository: 'bats-core/bats-support'
           path: 'test_helper/bats-support'
+          ref: 'v0.3.0'
       - uses: actions/checkout@v2
         with:
           repository: 'bats-core/bats-assert'
           path: 'test_helper/bats-assert'
+          ref: 'v2.0.0'
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
@@ -50,6 +53,6 @@ jobs:
       - name: Install Dependencies
         run: poetry install --no-dev
       - name: Run Tests
-        run: poetry run ./bats/bin/bats -rT ./tests
+        run: poetry run ./bats/bin/bats -rT --print-output-on-failure ./tests
         env:
           BATS_LIB_PATH: '${{ github.workspace }}/test_helper'
