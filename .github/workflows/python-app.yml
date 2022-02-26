@@ -50,6 +50,8 @@ jobs:
       - name: Install Dependencies
         run: poetry install --no-dev
       - name: Run Tests
-        run: ./bats/bin/bats -rT ./tests
+        run: |
+          poetry shell
+          ./bats/bin/bats -rT ./tests
         env:
           BATS_LIB_PATH: '${{ github.workspace }}/test_helper'
