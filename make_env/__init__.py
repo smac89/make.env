@@ -14,6 +14,7 @@ def load_make_env():
                 print(
                     f"\u001b[1;40;37mLoading .env from {envfile}...\u001b[0m",
                     file=sys.stderr,
+                    flush=True,
                 )
 
             os.environ.update({k: "" if v is None else v for k, v in denv.items()})
