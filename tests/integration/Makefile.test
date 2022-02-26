@@ -2,4 +2,7 @@ test_var:
 	@echo '$(TEST_VAR)'
 
 foo_bar:
-	@echo $(FOO_BAR)
+	@echo '$(FOO_BAR)'
+
+foo:
+	@echo '$(FOO)'
