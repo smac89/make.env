@@ -1,5 +1,6 @@
 #!/usr/bin/env bats
 
+export PYTHONUNBUFFERED=1
 export BATS_LIB_PATH=${BATS_LIB_PATH:-'/usr/lib/:usr/lib/bats/'}
 bats_load_library 'bats-support'
 bats_load_library 'bats-assert'
@@ -19,6 +20,10 @@ setup_file() {
 }
 
 @test "env variables same as make variables" {
+    if ! command -v make; then
+        skip "make not found"
+    fi
+
     test_var=$(make.env test_var)
     foo_bar=$(make.env foo_bar)
     source .env
@@ -29,10 +34,23 @@ setup_file() {
 }
 
 @test "env variables exported with existing --eval" {
+    if ! command -v make; then
+        skip "make not found"
+    fi
+
     run make.env --eval 'export FOO=bar' foo
     assert_line --index 1 'bar'
     source .env
     run make.env --eval 'export FOO=bar' foo test_var
     assert_line --index 1 'bar'
     assert_line --index 2 "$TEST_VAR"
+}
+
+@test "env variable with unclosed quote" {
+    if ! command -v make; then
+        skip "make not found"
+    fi
+
+    run make.env another_var
+    assert_line --index 1 '"hello world'
 }

@@ -1,8 +1,15 @@
+.PHONY: test_var foo_bar foo
+
+all: test_var foo_bar foo
+
 test_var:
-	@echo '$(TEST_VAR)'
+	@echo $(TEST_VAR)
 
 foo_bar:
-	@echo '$(FOO_BAR)'
+	@echo $(FOO_BAR)
+
+another_var:
+	@echo $(ANOTHER_VAR)
 
 foo:
-	@echo '$(FOO)'
+	@echo $(FOO)

@@ -24,7 +24,7 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Install Dependencies
         run: poetry install --no-dev --no-root
-      - name: Test with Unittest
+      - name: Run Unit Tests
         run: poetry run python -m unittest discover -v -s ./tests
 
   integrationtest:
