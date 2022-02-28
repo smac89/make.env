@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import Optional
+from typing import Optional, List
 
 from dotenv import find_dotenv, dotenv_values
 
@@ -29,7 +29,7 @@ def normalize_make_env(envs=os.environ) -> str:
     return "\n".join(f"export {k}:='$(value {k})'" for k in envs)
 
 
-def load_make_env(args: list[str] = sys.argv) -> Optional[str]:
+def load_make_env(args: List[str] = sys.argv) -> Optional[str]:
     """load the environment variables from the .env file
 
     Returns:
