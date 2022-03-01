@@ -15,9 +15,12 @@ classifiers = [
     "Topic :: Software Development :: Build Tools",
 ]
 keywords = ["make", ".env", "Makefile", "automation", "buildtool"]
+include = [
+    "LICENSE"
+]
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.8"
 python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]

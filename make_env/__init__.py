@@ -5,7 +5,7 @@ from typing import Optional, List
 from dotenv import find_dotenv, dotenv_values
 
 
-def normalize_make_env(envs=os.environ) -> str:
+def normalize_make_env(envs=os.environ) -> Optional[str]:
     """normalize the environment variables for make
 
     `Make` still attempts to expand environment variables in the Makefile,
@@ -26,7 +26,9 @@ def normalize_make_env(envs=os.environ) -> str:
     export FOO:='$(value FOO)'
     export BAR:='$(value BAR)'
     """
-    return "\n".join(f"export {k}:='$(value {k})'" for k in envs)
+    if envs:
+        return "\n".join(f"export {k}:='$(value {k})'" for k in envs)
+    return None
 
 
 def load_make_env(args: List[str] = sys.argv) -> Optional[str]:
@@ -53,18 +55,18 @@ def load_make_env(args: List[str] = sys.argv) -> Optional[str]:
     if any(x in args for x in ("-h", "--help", "-v", "--version")):
         return None
 
-    if any((arg_name := arg) in args for arg in ("-C", "--directory")):
-        if args[-1] == arg_name:
-            return None
+    arg_name = next(filter(lambda arg: arg in args, ("-C", "--directory")), None)
+    if not arg_name:
+        dot_env_dir_path = os.getcwd()
+    elif args[-1] != arg_name:
         dot_env_dir_path = os.path.abspath(args[args.index(arg_name) + 1])
     else:
-        dot_env_dir_path = os.getcwd()
+        return None
 
-    if envfile := find_dotenv(
-        usecwd=True, filename=os.path.join(dot_env_dir_path, ".env")
-    ):
+    envfile = find_dotenv(usecwd=True, filename=os.path.join(dot_env_dir_path, ".env"))
+    if envfile:
         denv = dotenv_values(envfile)
-        if any((v := os.environ.get(k)) is None or v != denv[k] for k in denv):
+        if any(os.environ.get(k) != v for k, v in denv.items()):
 
             if not any(x in args for x in ("--quiet", "--silent", "-s")):
                 print(
@@ -74,12 +76,13 @@ def load_make_env(args: List[str] = sys.argv) -> Optional[str]:
 
             os.environ.update({k: "" if v is None else v for k, v in denv.items()})
 
-            return normalize_make_env(denv)
+        return normalize_make_env(denv)
 
     return None
 
 
 def main():
-    if exports := load_make_env():
+    exports = load_make_env()
+    if exports:
         os.execlp("make", *sys.argv, "--eval", exports)
     os.execlp("make", *sys.argv)
