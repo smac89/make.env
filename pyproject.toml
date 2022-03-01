@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "make.env"
-version = "0.0.6"
+version = "0.0.7"
 description = "Infuses GNU make with the ability to read .env files"
 authors = ["smac89 <nobleman.code@gmx.com>"]
 license = "MIT"
@@ -20,7 +20,7 @@ include = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.6"
 python-dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]

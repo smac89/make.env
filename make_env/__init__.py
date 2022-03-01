@@ -25,6 +25,9 @@ def normalize_make_env(envs=os.environ) -> Optional[str]:
     >>> print(normalize_make_env({'FOO': 'hello$world', 'BAR': 'bye#world'}))
     export FOO:='$(value FOO)'
     export BAR:='$(value BAR)'
+
+    >>> print(normalize_make_env({}))
+    None
     """
     if envs:
         return "\n".join(f"export {k}:='$(value {k})'" for k in envs)
@@ -33,6 +36,9 @@ def normalize_make_env(envs=os.environ) -> Optional[str]:
 
 def load_make_env(args: List[str] = sys.argv) -> Optional[str]:
     """load the environment variables from the .env file
+
+    Args:
+        args (List[str], optional): The command line arguments. Defaults to sys.argv.
 
     Returns:
         Optional[str]: returns an eval snippet to be used with make
@@ -47,7 +53,7 @@ def load_make_env(args: List[str] = sys.argv) -> Optional[str]:
     ...     print(load_make_env(["make.env", "--directory", tmpdir]))
     ...     with open(os.path.join(tmpdir, ".env"), "w") as f:
     ...         print ("FOO=hello", file=f)
-    ...     print(load_make_env(["make.env", "--directory", tmpdir]))
+    ...     print(load_make_env(["make.env", "-C", tmpdir]))
     None
     export FOO:='$(value FOO)'
     """
